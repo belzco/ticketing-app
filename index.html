@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>티켓팅 게임 (모바일)</title>
+
+<style>
+body { margin:0; font-family: Arial, sans-serif; }
+
+/* ===== 모바일 반응형 ===== */
+@media (max-width:768px){
+  body{font-size:14px;}
+  .header-content{display:flex;flex-direction:column;text-align:center;}
+  .setup-container{padding:12px;}
+  .game-layout{display:flex;flex-direction:column;}
+  button{padding:14px;font-size:16px;}
+}
+
+/* 기본 UI 예시 */
+.header{background:#111;color:#fff;padding:10px;}
+.screen{padding:16px;}
+.btn-primary{background:#ff4d4f;color:#fff;border:none;border-radius:6px;width:100%;}
+</style>
+</head>
+
+<body>
+<div class="header">
+  <div class="header-content">
+    <h2>🎫 티켓팅 게임</h2>
+    <div>모바일 즉시 실행 버전</div>
+  </div>
+</div>
+
+<div class="screen">
+  <p>이 파일은 모바일에서 바로 실행 가능한 버전입니다.</p>
+  <button class="btn-primary">게임 시작</button>
+</div>
+</body>
+</html>
