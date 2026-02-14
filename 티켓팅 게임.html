@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티켓팅 예매</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">TICKET MASTER</div>
+            <div class="current-time" id="currentTime">2026.03.15 15:59:45</div>
+        </div>
+    </div>
+
+    <div id="setupScreen" class="screen active">
+        <div class="setup-container">
+            <div class="event-poster">
+                <div class="poster-image">
+                    <div class="poster-title">2026 SPECIAL CONCERT</div>
+                    <div class="poster-date">2026.03.15 (토) 19:00</div>
+                    <div class="poster-venue">올림픽공원 체조경기장</div>
+                </div>
+            </div>
+            
+            <div class="setup-card">
+                <h2>예매 설정</h2>
+                
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label>청소년 (14세 이상)</label>
+                        <div class="counter-control">
+                            <button type="button" class="counter-btn" onclick="adjustCount('teen', -1)">-</button>
+                            <input type="number" id="teenCount" min="0" max="4" value="0" readonly>
+                            <button type="button" class="counter-btn" onclick="adjustCount('teen', 1)">+</button>
+                        </div>
+                        <span class="price-label">66,000원</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>성인</label>
+                        <div class="counter-control">
+                            <button type="button" class="counter-btn" onclick="adjustCount('adult', -1)">-</button>
+                            <input type="number" id="adultCount" min="0" max="4" value="1" readonly>
+                            <button type="button" class="counter-btn" onclick="adjustCount('adult', 1)">+</button>
+                        </div>
+                        <span class="price-label">77,000원</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>난이도</label>
+                        <div class="difficulty-selector">
+                            <button type="button" class="difficulty-btn" data-rate="50" onclick="selectDifficulty(50)">쉬움</button>
+                            <button type="button" class="difficulty-btn active" data-rate="75" onclick="selectDifficulty(75)">보통</button>
+                            <button type="button" class="difficulty-btn" data-rate="90" onclick="selectDifficulty(90)">어려움</button>
+                            <button type="button" class="difficulty-btn" data-rate="98" onclick="selectDifficulty(98)">극악</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sale-time-info">
+                        <div class="sale-label">예매 시작 시간</div>
+                        <div class="sale-clock" id="saleTime">16:00:00</div>
+                        <div class="time-remaining">
+                            시작까지 <span id="timeUntilSale">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <button id="startBtn" class="btn-primary btn-large" onclick="goToLogin()" disabled>
+                        <span id="startBtnText">예매 대기</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginScreen" class="screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2>티켓 예매</h2>
+                    <div class="server-status" id="serverStatus">
+                        <span class="status-dot"></span>
+                        <span>서버 접속 중...</span>
+                    </div>
+                </div>
+                
+                <div class="login-timer-display">
+                    <div class="current-clock" id="loginClock">16:00:00</div>
+                    <div class="ready-message" id="readyMessage">정각에 클릭하세요!</div>
+                </div>
+                
+                <div class="captcha-section" id="captchaSection" style="display: none;">
+                    <label>보안문자를 입력하세요</label>
+                    <div class="captcha-image" id="captchaImage"></div>
+                    <input type="text" id="captchaInput" placeholder="위 문자를 입력하세요" maxlength="6">
+                </div>
+                
+                <button id="loginBtn" class="btn-primary btn-large" disabled>
+                    <span id="loginBtnText">대기 중...</span>
+                </button>
+                
+                <div id="loginMessage" class="login-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="waitingScreen" class="screen">
+        <div class="waiting-container">
+            <div class="waiting-card">
+                <div class="loading-animation">
+                    <div class="spinner"></div>
+                </div>
+                <h2>접속 중...</h2>
+                <div class="waiting-info">
+                    <p>현재 대기 인원</p>
+                    <div class="queue-number" id="queueNumber">0</div>
+                    <p class="queue-message">좌석 배정까지 잠시만 기다려주세요</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="waitingProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="screen">
+        <div class="game-layout">
+            <div class="game-sidebar-left">
+                <div class="price-info">
+                    <h3>가격정보</h3>
+                    <div class="price-item">
+                        <span class="grade vip-grade">VIP석</span>
+                        <span class="price">150,000원</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="grade r-grade">R석</span>
+                        <span class="price">130,000원</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="grade s-grade">S석</span>
+                        <span class="price">100,000원</span>
+                    </div>
+                    <div class="price-item">
+                        <span class="grade a-grade">A석</span>
+                        <span class="price">70,000원</span>
+                    </div>
+                </div>
+                
+                <div class="seat-legend">
+                    <h3>좌석안내</h3>
+                    <div class="legend-item">
+                        <span class="legend-box available"></span>
+                        <span>예매가능</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-box selected"></span>
+                        <span>선택좌석</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-box sold"></span>
+                        <span>예매완료</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-main">
+                <div class="timer-bar">
+                    <div class="timer-content">
+                        <span class="timer-label">남은시간</span>
+                        <span id="gameTimer" class="timer-value">01:30</span>
+                    </div>
+                    <div class="timer-progress">
+                        <div id="timerProgressBar" class="timer-progress-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="seat-area">
+                    <div class="stage-area">
+                        <div class="stage-label">STAGE</div>
+                    </div>
+                    
+                    <div class="zoom-toolbar">
+                        <button class="tool-btn" onclick="zoomIn()">+</button>
+                        <span id="zoomPercent">100%</span>
+                        <button class="tool-btn" onclick="zoomOut()">-</button>
+                        <button class="tool-btn" onclick="resetZoom()">초기화</button>
+                    </div>
+                    
+                    <div class="seat-viewport" id="seatViewport">
+                        <div class="seat-canvas" id="seatCanvas"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-sidebar-right">
+                <div class="minimap-container">
+                    <h3>전체좌석</h3>
+                    <div id="minimap" class="minimap"></div>
+                </div>
+                
+                <div class="selected-container">
+                    <h3>선택좌석 (<span id="selectedCount">0</span>/<span id="requiredCount">1</span>)</h3>
+                    <div id="selectedList" class="selected-list"></div>
+                    <div class="total-amount">
+                        <span>총 결제금액</span>
+                        <span id="totalAmount" class="amount-value">0원</span>
+                    </div>
+                </div>
+                
+                <button id="nextBtn" class="btn-danger btn-large" onclick="goToPayment()" disabled>
+                    다음단계
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentScreen" class="screen">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h2>결제하기</h2>
+                <div class="payment-timer">
+                    남은시간 <span id="paymentTimer">05:00</span>
+                </div>
+            </div>
+            
+            <div class="payment-steps">
+                <div class="step active" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">약관동의</span>
+                </div>
+                <div class="step" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">결제수단</span>
+                </div>
+                <div class="step" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">본인인증</span>
+                </div>
+                <div class="step" data-step="4">
+                    <span class="step-number">4</span>
+                    <span class="step-label">결제완료</span>
+                </div>
+            </div>
+            
+            <div class="payment-content">
+                <div id="step1" class="payment-step active">
+                    <h3>약관동의</h3>
+                    <div class="agreement-section">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeAll">
+                            <span>전체 동의</span>
+                        </label>
+                        <label class="checkbox-label required">
+                            <input type="checkbox" class="agree-item" data-required="true">
+                            <span>티켓 예매 이용약관 동의 (필수)</span>
+                        </label>
+                        <label class="checkbox-label required">
+                            <input type="checkbox" class="agree-item" data-required="true">
+                            <span>개인정보 수집 및 이용 동의 (필수)</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="agree-item">
+                            <span>마케팅 정보 수신 동의 (선택)</span>
+                        </label>
+                    </div>
+                    <button class="btn-primary btn-large" onclick="nextPaymentStep(2)">다음</button>
+                </div>
+                
+                <div id="step2" class="payment-step">
+                    <h3>결제수단 선택</h3>
+                    <div class="payment-methods">
+                        <label class="payment-method-item">
+                            <input type="radio" name="paymentMethod" value="card" checked>
+                            <span>신용카드</span>
+                        </label>
+                        <label class="payment-method-item">
+                            <input type="radio" name="paymentMethod" value="bank">
+                            <span>계좌이체</span>
+                        </label>
+                        <label class="payment-method-item">
+                            <input type="radio" name="paymentMethod" value="phone">
+                            <span>휴대폰결제</span>
+                        </label>
+                        <label class="payment-method-item">
+                            <input type="radio" name="paymentMethod" value="kakao">
+                            <span>카카오페이</span>
+                        </label>
+                    </div>
+                    <div class="selected-seats-summary" id="paymentSeatsList"></div>
+                    <div class="payment-amount-box">
+                        <span>최종 결제금액</span>
+                        <span id="finalAmount" class="final-amount">0원</span>
+                    </div>
+                    <button class="btn-primary btn-large" onclick="nextPaymentStep(3)">다음</button>
+                </div>
+                
+                <div id="step3" class="payment-step">
+                    <h3>본인인증</h3>
+                    <div class="auth-section">
+                        <p class="auth-message">결제를 위해 본인인증이 필요합니다</p>
+                        <div class="auth-code-input">
+                            <input type="text" id="authCode" placeholder="인증번호 6자리" maxlength="6">
+                            <button class="btn-secondary" onclick="requestAuthCode()">인증번호 받기</button>
+                        </div>
+                        <div id="authMessage" class="auth-message-box"></div>
+                    </div>
+                    <button class="btn-primary btn-large" onclick="verifyAndPay()">결제하기</button>
+                </div>
+                
+                <div id="step4" class="payment-step">
+                    <div class="payment-processing">
+                        <div class="processing-spinner"></div>
+                        <h3>결제 처리 중...</h3>
+                        <p>잠시만 기다려주세요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultScreen" class="screen">
+        <div class="result-container">
+            <div class="result-card">
+                <div id="resultIcon" class="result-icon"></div>
+                <h2 id="resultTitle"></h2>
+                <div id="resultMessage" class="result-message"></div>
+                <div id="resultDetails" class="result-details"></div>
+                <button class="btn-primary btn-large" onclick="resetGame()">처음으로</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <div id="errorMessage" class="modal-message"></div>
+            <button class="btn-secondary btn-large" onclick="closeErrorModal()">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
